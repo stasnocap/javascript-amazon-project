@@ -1,4 +1,4 @@
-﻿import { cart } from '../data/cart.js';
+﻿import { cart, addToCart } from '../data/cart.js';
 import { products } from '../data/products.js';
 
 let productsHTML = '';
@@ -59,7 +59,32 @@ products.forEach(product => {
 document.querySelector('.js-products-grid')
   .innerHTML = productsHTML;
 
-const timeoutIds = {};
+function updateCartQuantity() {
+  let cartQuantity = 0;
+  cart.forEach(x => {
+    cartQuantity += x.quantity;
+  })
+
+  document.querySelector('.js-cart-quantity')
+    .innerHTML = cartQuantity;
+}
+
+const addedTimeouts = {};
+function showAddedLabel(productId) {
+  const jsAddedSelector =`.js-added-to-cart-${productId}`;
+
+  document.querySelector(jsAddedSelector)
+    .classList.add('visible');
+
+  if (addedTimeouts[productId]) {
+    clearTimeout(addedTimeouts[productId]);
+  }
+
+  addedTimeouts[productId] = setTimeout(() => {
+    document.querySelector(jsAddedSelector)
+      .classList.remove('visible');
+  }, 1000);
+}
 
 document
   .querySelectorAll('.js-add-to-cart')
@@ -67,38 +92,10 @@ document
     button.addEventListener('click', () => {
       const { productId } = button.dataset;
       
-      const quantity = Number(document.querySelector(`.js-quantity-selector-${productId}`).value);
+      addToCart(productId);
       
-      const exists = cart.find(x => x.productId === productId);
-      if (exists) {
-        exists.quantity += quantity;
-      } else {
-        cart.push({
-          productId,
-          quantity
-        });
-      }
+      updateCartQuantity();
       
-      let cartQuantity = 0;
-      cart.forEach(x => {
-        cartQuantity += x.quantity;
-      })
-      
-      document.querySelector('.js-cart-quantity')
-        .innerHTML = cartQuantity;
-      
-      const jsAddedSelector =`.js-added-to-cart-${productId}`;
-      
-      document.querySelector(jsAddedSelector)
-        .classList.add('visible');
-      
-      if (timeoutIds[productId]) {
-        clearTimeout(timeoutIds[productId]);
-      }
-
-      timeoutIds[productId] = setTimeout(() => {
-        document.querySelector(jsAddedSelector)
-          .classList.remove('visible');
-      }, 1000);
+      showAddedLabel(productId);
     });
   });
