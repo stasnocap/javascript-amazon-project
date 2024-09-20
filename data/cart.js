@@ -21,3 +21,13 @@ export function addToCart(productId) {
     });
   }
 }
+
+export function removeFromCart(productId) {
+ const index = cart.findIndex(x => x.productId === productId);
+ 
+ if (index === -1) {
+   return;
+ }
+ 
+ cart.splice(index, 1);
+}
