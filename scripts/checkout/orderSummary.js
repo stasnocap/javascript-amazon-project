@@ -13,7 +13,7 @@ export function renderOrderSummary() {
     const deliveryOption = getDeliveryOption(deliveryOptionId);
 
     cartHTML += `
-    <div class="cart-item-container-${productId}">
+    <div class="cart-item-container js-cart-item-container-${productId}">
       <div class="delivery-date">
         Delivery date: ${getDeliveryDate(deliveryOption.deliveryDays)}
       </div>
@@ -26,14 +26,14 @@ export function renderOrderSummary() {
           <div class="product-price">
             $${formatCurrency(product.priceCents)}
           </div>
-          <div class="product-quantity">
+          <div class="product-quantity js-product-quantity-${productId}">
             <span>
               Quantity: <span class="quantity-label">${quantity}</span>
             </span>
             <span class="update-quantity-link link-primary">
               Update
             </span>
-            <span class="delete-quantity-link link-primary js-delete-quantity-link" data-product-id="${productId}">
+            <span class="delete-quantity-link link-primary js-delete-quantity-link js-delete-quantity-link-${productId}" data-product-id="${productId}">
               Delete
             </span>
           </div>
@@ -91,7 +91,7 @@ export function renderOrderSummary() {
         const {productId} = link.dataset;
         removeFromCart(productId);
 
-        const container = document.querySelector(`.cart-item-container-${productId}`);
+        const container = document.querySelector(`.js-cart-item-container-${productId}`);
         container.remove();
         
         renderPaymentSummary();
