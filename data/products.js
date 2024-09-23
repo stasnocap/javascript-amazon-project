@@ -69,6 +69,17 @@ console.log(tshirt);
 
 export let products = [];
 
+export function loadProductsFetch() {
+  return fetch('https://supersimplebackend.dev/products')
+    .then((response) => response.json())
+    .then((productsData) => {
+      products = productsData
+        .map(productDetails => productDetails.type === 'clothing' ? new Clothing(productDetails) : new Product(productDetails));
+
+      console.log('load products')
+    });
+}
+
 export function loadProducts(callBack) {
   const xhr = new XMLHttpRequest(); 
   
